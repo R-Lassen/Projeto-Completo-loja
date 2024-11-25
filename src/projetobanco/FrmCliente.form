@@ -283,12 +283,10 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
                       <Component id="btnSair" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="btnCadastrar" alignment="0" max="32767" attributes="0"/>
-                          <Component id="btnLimpar" alignment="0" max="32767" attributes="0"/>
-                          <Component id="btnAlterar" alignment="0" max="32767" attributes="0"/>
-                          <Component id="btnExcluir" alignment="0" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="btnCadastrar" alignment="0" max="32767" attributes="0"/>
+                      <Component id="btnLimpar" alignment="0" max="32767" attributes="0"/>
+                      <Component id="btnAlterar" alignment="0" max="32767" attributes="0"/>
+                      <Component id="btnExcluir" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>

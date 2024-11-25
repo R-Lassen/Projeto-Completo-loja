@@ -1,6 +1,7 @@
 
 package projetobanco;
 
+import static java.lang.Integer.parseInt;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -80,7 +81,7 @@ public class FrmProduto extends javax.swing.JFrame {
                       rs.getString("preco_compra"),
                        rs.getString("preco_venda"),
                         rs.getString("bar_code"),
-                         rs.getString("ncm"),
+                         rs.getInt("ncm"),
                           rs.getString("fator")
             });
             }//fim while
@@ -95,8 +96,8 @@ public class FrmProduto extends javax.swing.JFrame {
     public void alterar(){
         conexao = Conexao.obterConexao();
         try{
-            String sql = "update produto set nome=?,descricao=?,qtd_estoque=?,qtd_minima=?,qtd_maxima=?,preco_compra?,preco_venda=?,bar_code?,ncm=?,fator=? where id=?";
-            pst = conexao.prepareStatement(sql);
+            String sql = "update produto set nome=?,descricao=?,qtd_estoque=?,qtd_minima=?,qtd_maxima=?,preco_compra=?,preco_venda=?,bar_code=?,ncm=?,fator=? where id=?";
+            pst = conexao.prepareStatement(sql); 
             pst.setString(1, txtNome.getText());
             pst.setString(2, txtDescricao.getText());
             pst.setString(3, txtEstoque.getText());
@@ -105,14 +106,14 @@ public class FrmProduto extends javax.swing.JFrame {
             pst.setString(6, txtPrecoCompra.getText());
             pst.setString(7, txtPrecoVenda.getText());
             pst.setString(8, CodigoBarras.getText());
-            pst.setString(9, ncm.getText());
+            pst.setInt(9, parseInt(ncm.getText()));
             pst.setString(10, txtFatorLucro.getText());
             pst.setString(11, lblCod.getText());
             pst.execute();
             pst.close();
             JOptionPane.showMessageDialog(null, "Alterado com sucesso");
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao alterar");
+            JOptionPane.showMessageDialog(null, "Erro ao alterar"+e);
         }
         limpar();
         listar();
