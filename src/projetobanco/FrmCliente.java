@@ -20,7 +20,7 @@ public class FrmCliente extends javax.swing.JFrame {
     Connection conexao;
     PreparedStatement pst;
     ResultSet rs;
-
+   
     public void limpar(){
         txtNome.setText("");
         txtTelefone.setText("");
@@ -51,25 +51,29 @@ public class FrmCliente extends javax.swing.JFrame {
     public void listar(){
         conexao = Conexao.obterConexao();
         DefaultTableModel model = (DefaultTableModel) tblCli.getModel();
-        model.setNumRows(0);
+        model.setNumRows(0); // Limpa os dados antigos
         try{
             String sql = "select * from cliente where nome like ?";
             pst = conexao.prepareStatement(sql);
             pst.setString(1, txtPesquisar.getText() + "%");
             rs = pst.executeQuery();
             while (rs.next()){
-                model.addRow(new Object[]{
+                model.addRow(new Object[]{ //
                 rs.getInt("codigo"),
                  rs.getString("nome"),
                   rs.getString("telefone"),
                    rs.getString("endereco"),
                     rs.getString("email")
+                        
+                
             });
             }//fim while
             pst.close();
         }//fim try
         catch (Exception e){
         }//fim catch
+        
+        // Atualiza a interface de pesquisa
         txtPesquisar.setText("");
         txtPesquisar.grabFocus(); 
     }//fim listar

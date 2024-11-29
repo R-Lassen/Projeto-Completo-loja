@@ -1,11 +1,18 @@
 
 package projetobanco;
 
+import java.awt.Image;
+import java.io.FileInputStream;
 import static java.lang.Integer.parseInt;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -19,6 +26,10 @@ public class FrmProduto extends javax.swing.JFrame {
         initComponents();
     }
 
+    private FileInputStream fis;
+    private int tamanho;
+    private boolean fotoCarregada = false;
+    
     Connection conexao;
     PreparedStatement pst;
     ResultSet rs;
@@ -70,21 +81,33 @@ public class FrmProduto extends javax.swing.JFrame {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, txtPesquisar.getText() + "%");
             rs = pst.executeQuery();
-            while (rs.next()){
-                model.addRow(new Object[]{
-                rs.getInt("id"),
-                 rs.getString("nome"),
-                  rs.getString("descricao"),
-                   rs.getString("qtd_estoque"),
-                    rs.getString("qtd_minima"),
-                     rs.getInt("qtd_maxima"),
-                      rs.getString("preco_compra"),
-                       rs.getString("preco_venda"),
-                        rs.getString("bar_code"),
-                         rs.getInt("ncm"),
-                          rs.getString("fator")
-            });
-            }//fim while
+            
+            while (rs.next()){                
+                rs.getInt("id");
+                rs.getString("nome");
+                rs.getString("descricao");
+                rs.getString("qtd_estoque");
+                rs.getString("qtd_minima");
+                rs.getInt("qtd_maxima");
+                rs.getString("preco_compra");
+                rs.getString("preco_venda");
+                rs.getString("bar_code");
+                rs.getInt("ncm");
+                rs.getString("fator");
+                          
+           // Obtendo a imagem como Blob
+            Blob blob = rs.getBlob("imagem");
+            ImageIcon foto = null;
+            if (blob != null) {
+                byte[] imgData = blob.getBytes(1, (int) blob.length());
+                Image img = new ImageIcon(imgData).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+                foto = new ImageIcon(img);
+            }
+
+            // Adiciona a linha à tabela
+            model.addRow(new Object[]{id, nome, descricao, qtd_estoque, qtd_minima, qtd_maxima, preco_compra, preco_venda, bar_code, ncm, fator, foto});
+        }
+
             pst.close();
         }//fim try
         catch (Exception e){
@@ -148,11 +171,33 @@ public class FrmProduto extends javax.swing.JFrame {
         ncm.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 9).toString());
         txtFatorLucro.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 10).toString());
     }//fim selecionar okk
+    
+    
+    private void carregarFoto() {
+        JFileChooser jfc = new JFileChooser();
+        jfc.setDialogTitle("Selecionar arquivo");
+        jfc.setFileFilter(new FileNameExtensionFilter("Arquivo de imagens (*.PNG,*.JPG,*.JPEG)", "png", "jpg", "jpeg"));
+        int resultado = jfc.showOpenDialog(this);
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            try {
+                fis = new FileInputStream(jfc.getSelectedFile());
+                tamanho = (int) jfc.getSelectedFile().length();
+                Image foto = ImageIO.read(jfc.getSelectedFile()).getScaledInstance(lblFoto.getWidth(),
+                        lblFoto.getHeight(), Image.SCALE_SMOOTH);
+                lblFoto.setIcon(new ImageIcon(foto));
+                lblFoto.updateUI();
+                fotoCarregada = true;
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    }
      
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel8 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
@@ -173,7 +218,7 @@ public class FrmProduto extends javax.swing.JFrame {
         Status = new javax.swing.JComboBox<>();
         txtDescricao = new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        lblFoto = new javax.swing.JLabel();
         txtEstoque = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
@@ -196,6 +241,8 @@ public class FrmProduto extends javax.swing.JFrame {
         jPanel7 = new javax.swing.JPanel();
         btnListar = new javax.swing.JButton();
         txtPesquisar = new javax.swing.JTextField();
+
+        jLabel8.setText("jLabel8");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -323,7 +370,7 @@ public class FrmProduto extends javax.swing.JFrame {
 
         jPanel6.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jLabel2.setText("Imagem");
+        lblFoto.setText("Imagem");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -331,13 +378,13 @@ public class FrmProduto extends javax.swing.JFrame {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                 .addContainerGap(46, Short.MAX_VALUE)
-                .addComponent(jLabel2)
+                .addComponent(lblFoto)
                 .addGap(46, 46, 46))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jLabel2)
+                .addComponent(lblFoto)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -698,12 +745,12 @@ public class FrmProduto extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -714,6 +761,7 @@ public class FrmProduto extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCod;
+    private javax.swing.JLabel lblFoto;
     private javax.swing.JTextField ncm;
     private javax.swing.JTable tblCli;
     private javax.swing.JTextField txtDescricao;
