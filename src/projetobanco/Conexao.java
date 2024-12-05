@@ -36,3 +36,22 @@ public class Conexao {
         System.out.println("Conectado com sucesso");
     }
 }
+
+/*
+create table produto(
+    id int primary key auto_increment,
+    status char(1),
+    nome varchar(32),
+    descricao text,
+    qtd_estoque int(11),
+    qtd_minima int(11) ,
+    qtd_maxima int(11),
+    preco_compra decimal(12,2),
+    preco_venda decimal(12,2),
+    bar_code int(11),
+    ncm int(20),
+    fator decimal(12,2) ,
+
+    imagem longblob
+);
+*/

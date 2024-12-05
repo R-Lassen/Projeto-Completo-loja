@@ -68,26 +68,27 @@ public class FrmProduto extends javax.swing.JFrame {
         conexao = Conexao.obterConexao();
         //calcularLucro();
         try{
-            //String sql = "insert into produto (nome,descricao,qtd_estoque,qtd_minima,qtd_maxima,preco_compra,preco_venda,bar_code,ncm,fator,data_cadastro) values (?,?,?,?,?,?,?,?,?,?,?)";
-            String sql = "insert into produto  (nome,qtd_estoque,preco_compra,preco_venda,fator,status,imagem)  values (?,?,?,?,?,?,?)";
+            String sql = "insert into produto (nome,status,descricao,qtd_estoque,qtd_minima,qtd_maxima,preco_compra,preco_venda,bar_code,ncm,fator,imagem) values (?,?,?,?,?,?,?,?,?,?,?,?)";
+            //String sql = "insert into produto  (nome,status,qtd_estoque,preco_compra,preco_venda,fator,imagem)  values (?,?,?,?,?,?,?)";
             pst = conexao.prepareStatement(sql);
             pst.setString(1, txtNome.getText());
-            //pst.setString(2, txtDescricao.getText());
-            pst.setInt(2, Integer.parseInt(txtEstoque.getText()));
-            //pst.setString(4, txtEstoqueMinimo.getText());
-           // pst.setString(5, txtEstoqueMaximo.getText());
-            pst.setInt(3, Integer.parseInt(txtPrecoCompra.getText()));
-            pst.setInt(4, Integer.parseInt(txtPrecoVenda.getText()));
-            //pst.setString(8, CodigoBarras.getText());
-           // pst.setString(9, ncm.getText());
-            pst.setDouble(5, calcularLucro());
-            pst.setString(6,String.valueOf(Status.getSelectedItem().toString().charAt(0)));
+            pst.setString(2,String.valueOf(Status.getSelectedItem().toString().charAt(0)));
+            pst.setString(3, txtDescricao.getText());
+            pst.setInt(4, Integer.parseInt(txtEstoque.getText()));
+            pst.setString(5, txtEstoqueMinimo.getText());
+            pst.setString(6, txtEstoqueMaximo.getText());
+            pst.setInt(7, Integer.parseInt(txtPrecoCompra.getText()));
+            pst.setInt(8, Integer.parseInt(txtPrecoVenda.getText()));
+            pst.setString(9, CodigoBarras.getText());
+            pst.setString(10, ncm.getText());
+            pst.setDouble(11, calcularLucro());
+            
            // pst.setString(11, jfData.getText());
-            pst.setBlob(7, fis, tamanho);
+            pst.setBlob(12, fis, tamanho);
             int confirma = pst.executeUpdate();
             
             if (confirma == 1){
-                JOptionPane.showMessageDialog(null, "Alterado com sucesso");
+                JOptionPane.showMessageDialog(null, "cadastrado com sucesso");
             
             }else{
                  JOptionPane.showMessageDialog(null, "Erro ao alterar");
@@ -103,30 +104,63 @@ public class FrmProduto extends javax.swing.JFrame {
         }
         limpar();
         listar();
+        
+        /*
+        pst.setDouble(12, calcularLucro());
+           // pst.setTimestamp(13,Timestamp.from(pro_dataCad.getDate().toInstant()));//data_cadastro
+            InputStream is = new FileInputStream(new File(path2));
+            pst.setBlob(14, is);
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(this, "Registro inserido com sucesso!");
+
+        }catch(ClassNotFoundException e){
+            java.util.logging.Logger.getLogger(Principal.class.getName()).log(
+                java.util.logging.Level.SEVERE, null, e);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(projeto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        */
      }//fim alterar
     
     public void alterar(){
-        String sql = "update produto set nome=?,qtd_estoque=?,preco_compra=?,preco_venda=?,fator=?,status=?,imagem=? where id=?";
+        //String sql = "update produto set nome=?,qtd_estoque=?,preco_compra=?,preco_venda=?,fator=?,status=?,imagem=? where id=?";
         
         try{
-            //String sql = "update produto set nome=?,descricao=?,qtd_estoque=?,qtd_minima=?,qtd_maxima=?,preco_compra=?,preco_venda=?,bar_code=?,ncm=?,fator=?,data_cadastro=?,status=? where id=?";
+            /*
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            sqlConn = DriverManager.getConnection(conn, username, password);
+            TableModel RecordTable = jTable1.getModel();
+            int SelectedRows = jTable1.getSelectedRow();
+
+            pst = sqlConn.prepareStatement("UPDATE produto SET  cod = ?, status = ?, nome = ?, descricao = ?, qtd_estoque = ?, estoque_minimo = ?, estoque_maximo = ?, preco_compra = ?, preco_venda = ?, bar_code = ?, ncm = ?, fator = ?, data_cadastro = ?, imagem = ? WHERE cod = ?;");
+            pst.setString(1, pro_cod.getText());//codigo
+            pst.setString(2,String.valueOf(pro_status.getSelectedItem().toString().charAt(0)));//status do produto
+            pst.setString(3, pro_nome.getText());//nome do produto
+            */
+            
+            String sql = "update produto set nome=?,status=?,descricao=?,qtd_estoque=?,qtd_minima=?,qtd_maxima=?,preco_compra=?,preco_venda=?,bar_code=?,ncm=?,fator=? where id=?";
             
             pst = conexao.prepareStatement(sql); 
             pst = conexao.prepareStatement(sql); 
             pst.setString(1, txtNome.getText());
-           // pst.setString(2, txtDescricao.getText());
-            pst.setInt(2, Integer.parseInt(txtEstoque.getText()));
-          //  pst.setString(4, txtEstoqueMinimo.getText());
-          //  pst.setString(5, txtEstoqueMaximo.getText());
-            pst.setInt(3, Integer.parseInt(txtPrecoCompra.getText()));
-            pst.setString(4, txtPrecoVenda.getText());
-          ///  pst.setString(8, CodigoBarras.getText());
-          //  pst.setInt(9, parseInt(ncm.getText()));
-            pst.setDouble(5, calcularLucro());
-            pst.setString(6,String.valueOf(Status.getSelectedItem().toString().charAt(0)));
+            pst.setString(2,String.valueOf(Status.getSelectedItem().toString().charAt(0)));
+            pst.setString(3, txtDescricao.getText());
+            pst.setInt(4, Integer.parseInt(txtEstoque.getText()));
+            pst.setString(5, txtEstoqueMinimo.getText());
+            pst.setString(6, txtEstoqueMaximo.getText());
+            pst.setInt(7, Integer.parseInt(txtPrecoCompra.getText()));
+            pst.setString(8, txtPrecoVenda.getText());
+            pst.setString(9, CodigoBarras.getText());
+            pst.setInt(10, parseInt(ncm.getText()));
+            pst.setDouble(11, calcularLucro());
+            
             //InputStream is = new FileInputStream(new File(path2));
-            pst.setBlob(7, fis,tamanho);
-            pst.setString(8, lblCod.getText());
+            //pst.setBlob(12, fis,tamanho);
+            pst.setString(12, lblCod.getText());
             
           //  calcularLucro();
             int confirma = pst.executeUpdate();
@@ -148,7 +182,36 @@ public class FrmProduto extends javax.swing.JFrame {
         }
         limpar();
         listar();
+        
+        /*
+         pst.setDouble(12, calcularLucro());//fator lucro
+           // pst.setTimestamp(13,Timestamp.from(pro_dataCad.getDate().toInstant()));//data_cadastro
+            InputStream is = new FileInputStream(new File(path2));
+            pst.setBlob(14, is);//imagem
+            pst.setString(15, pro_cod.getText());
+            calcularLucro();
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(this, "Registro alterado com sucesso!");
+            upDateDB();
+            limpar();
+
+        }catch (ClassNotFoundException e){
+            java.util.logging.Logger.getLogger(Principal.class.getName()).log(
+                java.util.logging.Level.SEVERE,
+                null, e);
+        }catch (SQLException e){
+            java.util.logging.Logger.getLogger(Principal.class.getName()).log(
+                java.util.logging.Level.SEVERE,
+                null, e);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(projeto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        */
+        
      }//fim alterar
+    
+    
+    
     
     public void apagar(){
         conexao = Conexao.obterConexao();
@@ -169,15 +232,15 @@ public class FrmProduto extends javax.swing.JFrame {
     public void limpar(){
         lblCod.setText("Código");
         txtNome.setText("");
-        //txtDescricao.setText("");
+        txtDescricao.setText("");
         txtEstoque.setText("");
-        //txtEstoqueMinimo.setText("");
-        //txtEstoqueMaximo.setText("");
+        txtEstoqueMinimo.setText("");
+        txtEstoqueMaximo.setText("");
         txtPrecoCompra.setText("");
         txtPrecoVenda.setText("");
-        //CodigoBarras.setText("");
+        CodigoBarras.setText("");
         //jfData.setText("");
-        //ncm.setText("");
+        ncm.setText("");
         txtFatorLucro.setText("");
         lblFoto.setIcon(null);
     }//LIMPAROKK
@@ -194,12 +257,15 @@ public class FrmProduto extends javax.swing.JFrame {
     }
     
     public double calcularLucro(){
-         double venda, compra, lucro;
+         double venda, compra = 0;
+         
          venda = Double.parseDouble(txtPrecoVenda.getText());
          compra = Double.parseDouble(txtPrecoCompra.getText());
          
-         lucro = (venda-compra*100);
-         
+         double lucro = venda-compra;
+    
+         lucro = venda / compra*100;
+       
          txtFatorLucro.setText(Double.toString(lucro));
          return lucro;
     }
@@ -218,17 +284,16 @@ public class FrmProduto extends javax.swing.JFrame {
                 model.addRow(new Object[]{
                 rs.getInt("id"),
                  rs.getString("nome"),
-              //    rs.getString("descricao"),
+                  rs.getString("descricao"),
                    rs.getString("qtd_estoque"),
-                 //   rs.getString("qtd_minima"),
-                   //  rs.getInt("qtd_maxima"),
+                    rs.getString("qtd_minima"),
+                     rs.getInt("qtd_maxima"),
                       rs.getString("preco_compra"),
                        rs.getString("preco_venda"),
-                      //  rs.getString("bar_code"),
-                       //  rs.getInt("ncm"),
+                       rs.getString("bar_code"),
+                         rs.getInt("ncm"),
                           rs.getString("fator"),
-                          
-                        
+     
             });
             }//fim while
 
@@ -245,15 +310,70 @@ public class FrmProduto extends javax.swing.JFrame {
     public void selecionar (){
         lblCod.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 0).toString());
         txtNome.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 1).toString());
-      //  txtDescricao.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 2).toString());
-        txtEstoque.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 2).toString());
-    //    txtEstoqueMinimo.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 4).toString());
-    //    txtEstoqueMaximo.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 5).toString());
-        txtPrecoCompra.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 3).toString());
-        txtPrecoVenda.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 4).toString());
-   //     CodigoBarras.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 8).toString());
-     //   ncm.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 9).toString());
-        txtFatorLucro.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 5).toString());
+        txtDescricao.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 2).toString());
+        txtEstoque.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 3).toString());
+        txtEstoqueMinimo.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 4).toString());
+        txtEstoqueMaximo.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 5).toString());
+        txtPrecoCompra.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 6).toString());
+        txtPrecoVenda.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 7).toString());
+        CodigoBarras.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 8).toString());
+        ncm.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 9).toString());
+        txtFatorLucro.setText(tblCli.getValueAt(tblCli.getSelectedRow(), 10).toString());
+        
+        
+        
+        /*
+        int r = jTable1.getSelectedRow();
+        String click = (jTable1.getModel().getValueAt(r, 0).toString());
+        String sql = "SELECT cod, status, nome,descricao FROM produto WHERE id= '" + click + "'";
+        try{
+            pst = sqlConn.prepareStatement(sql);
+            rs = pst.executeQuery();
+            if(rs.next()){
+                String cod = rs.getString(2);
+                String status = rs.getString(3);
+                String nome = rs.getString(4);
+                String desc = rs.getString(5);
+                String qtdEstoque = rs.getString(6);
+                String maximo = rs.getString(7);
+                String minimo = rs.getString(8);
+                String compra = rs.getString(9);
+                String venda = rs.getString(10);
+                String barCode = rs.getString(11);
+                String ncm = rs.getString(12);
+                String fator = rs.getString(13);
+                Date dataCad = rs.getDate(14);
+                Blob image = rs.getBlob(15);
+                String path = "C:\\ImagensSQL\\img.jpg";
+                if(status.equals("A")){
+                    pro_status.setSelectedItem("A - ativo");
+                }else{
+                    pro_status.setSelectedItem("I - inativo");
+                }
+                byte [] bytea = image.getBytes(1, (int)image.length());
+                FileOutputStream fos = new FileOutputStream(path);
+                fos.write(bytea);
+                ImageIcon icon = new ImageIcon(bytea);
+                path2 = path;
+                lblFoto.setIcon(icon);
+                pro_cod.setText(cod);
+                pro_nome.setText(nome);
+                pro_desc.setText(desc);
+        //       qtd_estoque.setText(qtdEstoque);
+                estoque_minimo.setText(minimo);
+                estoque_maximo.setText(maximo);
+                pre_compra.setText(compra);
+                pre_venda.setText(venda);
+                bar_code.setText(barCode);
+                this.ncm.setText(ncm);
+                fat_lucro.setText(fator);
+                //pro_dataCad.setDate(dataCad); //
+
+            }
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this,"Erro:" + e.getMessage());
+        }
+        */
     }//fim selecionar okk
     
     
@@ -297,8 +417,7 @@ public class FrmProduto extends javax.swing.JFrame {
     */
     }
     public void upDateDB() {
-        
-   
+     
         /*try{
             conexao = Conexao.obterConexao();
             rs = pst.executeQuery();
@@ -306,7 +425,7 @@ public class FrmProduto extends javax.swing.JFrame {
             q = stData.getColumnCount();
             DefaultTableModel RecordTable = new DefaultTableModel();
             //defina o modelo da tabela
-            tblCli.setModel(RecordTable);
+            jTable1.setModel(RecordTable);
             //adcione as colunas
             for(int i = 1; i <= q; i++){
                 RecordTable.addColumn(stData.getColumnName(i));
@@ -320,7 +439,7 @@ public class FrmProduto extends javax.swing.JFrame {
                 RecordTable.addRow(rowData);
             }
             //Notifique a tabela que o modelo foi alterado
-            tblCli.setModel(RecordTable);
+            jTable1.setModel(RecordTable);
         }catch(Exception e){
             JOptionPane.showMessageDialog(this,"Erro:" + e.getMessage());
         }
@@ -682,13 +801,13 @@ public class FrmProduto extends javax.swing.JFrame {
 
         tblCli.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "ID ", "Status", "Nome", "Qtd Est", "Preço Compra", "Preço Venda", "Fator %"
+                "ID ", "Nome", "Qtd Est", "Preço Compra", "Preço Venda", "Fator %"
             }
         ));
         tblCli.addMouseListener(new java.awt.event.MouseAdapter() {
